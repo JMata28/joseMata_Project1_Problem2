@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "joseMata_Project1_Problem2",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "joseMata_Project1_Problem2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-joseMata_Project1_Problem2-Debug-f2371444c384f5104b8e.json",
+					"name" : "joseMata_Project1_Problem2",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/josemata/Documents/COMP 590 - Computer Architecture/Project 1/joseMata_Project1_Problem2/cmake-build-debug",
+		"source" : "/Users/josemata/Documents/COMP 590 - Computer Architecture/Project 1/joseMata_Project1_Problem2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

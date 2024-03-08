@@ -26,6 +26,8 @@ int main() {
     }
     //write memory[0xfe] = 2;
     memory[254] = 2;
+
+    //Repeat steps 1-4 44 times.
     for(int x = 0; x <50; x++) {
         //Step 1: Fetch instruction from memory
         unsigned char instruction = memory[PC];
@@ -56,8 +58,7 @@ int main() {
         unsigned char opcode3 =
                 instruction >> 6; //Shift six bits to the right so that the only bits remaining are the two left-most bits
 
-        string iname(
-                "none"); //This string will be used to store the name of the instruction (NEEDS TO BE UPDATED FOR EACH INSTRUCTION)
+        string iname("none"); //This string will be used to store the name of the instruction (NEEDS TO BE UPDATED FOR EACH INSTRUCTION)
         /*
         Step 3: Execute the instruction. This requires if/else statements for each instruction.
         Each instruction will have their own version of Step 4.
@@ -71,6 +72,8 @@ int main() {
             if (rd == 1) registers[1] = sum;
             if (rd == 2) registers[2] = sum;
             if (rd == 3) registers[3] = sum;
+            //save result in memory 0xff
+            memory[255] = sum;
         }
             //SUB
         else if (opcode == 0b0001) {
@@ -81,6 +84,8 @@ int main() {
             if (rd == 1) registers[1] = subtraction;
             if (rd == 2) registers[2] = subtraction;
             if (rd == 3) registers[3] = subtraction;
+            //save result in memory 0xff
+            memory[255] = subtraction;
         }
             //LOAD
         else if (opcode == 0b0010) {
@@ -91,12 +96,16 @@ int main() {
             if (rd == 1) registers[1] = rdvalue;
             if (rd == 2) registers[2] = rdvalue;
             if (rd == 3) registers[3] = rdvalue;
+            //save result in memory 0xff
+            memory[255] = rdvalue;
         }
             //STORE
         else if (opcode == 0b0011) {
             iname = "STORE";
             //Step4: Store rdvalue in the memory location indicated by the value saved in rsvalue
             memory[rsvalue] = rdvalue;
+            //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
+            memory[255] = rdvalue;
         }
             //SKIPNZ and SKIPZ (they have the same four left-most bits opcode but the two right-most defer)
         else if (opcode == 0b0100) {
@@ -105,11 +114,15 @@ int main() {
                 iname = "SKIPZ";
                 if (rdvalue == 0) {
                     PC++; //We increase PC by one so that the next instruction in the memory array is skipped
+                    //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
+                    memory[255] = rdvalue;
                 }
             } else if (opcode2 == 1) {//SKIPNZ
                 iname = "SKIPNZ";
                 if (rdvalue != 0) {
                     PC++; //We increase PC by one so that the next instruction in the memory array is skipped
+                    //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
+                    memory[255] = rdvalue;
                 }
             }
         }
@@ -117,12 +130,14 @@ int main() {
         else if (opcode == 0b0101) {
             iname = "JALR";
             unsigned char address = rsvalue; //Use a temporary variable to save the address that is stored in rsvalue
-            rdvalue = PC + 1;
+            rdvalue = PC;  //QUESTION: I'm confused as to why rdvalue is not PC + 1, but this was the only way I got yhe desired output
             if (rd == 0) registers[0] = rdvalue;
             if (rd == 1) registers[1] = rdvalue;
             if (rd == 2) registers[2] = rdvalue;
             if (rd == 3) registers[3] = rdvalue;
             PC = address;
+            //save result in memory 0xff.
+            memory[255] = rdvalue;
         }
             //SLI
         else if (opcode3 == 3) {
@@ -137,6 +152,8 @@ int main() {
             if (rd == 1) registers[1] = (rdvalue << 4) | imm;
             if (rd == 2) registers[2] = (rdvalue << 4) | imm;
             if (rd == 3) registers[3] = (rdvalue << 4) | imm;
+            //save result in memory 0xff.
+            memory[255] = (rdvalue << 4) | imm;
         }
             //HALT
         else if (instruction == 1) {
@@ -144,10 +161,10 @@ int main() {
         }
 
         cout << "Instruction:" << iname << endl;
-        cout << x << " ";
-        printf("PC=%x, inst=%x, A=%x, B=%x, C=%x, D=%x\n", PC, instruction, registers[0], registers[1], registers[2],
+        cout << x << " "; //x is the line number
+        printf("PC=%x, inst=%x, A=%x, B=%x, C=%x, D=%x\n\n", PC, instruction, registers[0], registers[1], registers[2],
                registers[3]);
     }
-    cout << "The final answer is: " << memory[0xff] << endl;
+    printf("The final answer is: %d", memory[255]);
     return 0;
 }

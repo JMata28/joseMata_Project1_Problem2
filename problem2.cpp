@@ -10,25 +10,28 @@ unsigned char memory[256];
 unsigned char registers[4];
 
 int main() {
-    //Set registers A(0), B(1), C(2), and D(3) to zero.
-    registers[0] = 0;
-    registers[1] = 0;
-    registers[2] = 0;
-    registers[3] = 0;
-
     //Set PC to 0
     PC =0;
 
-    //Use a for loop to copy the test program into memory array
+    // The following lines (25-29) should be implemented for the test program that multiplies 2*3. Else, they should be commented out.
+    //Use a for loop to copy the test program into memory array and write memory[0xfe] = 2;
     unsigned char program[21] = {0xff,0xfe,0x23,0x15,0xc8,0xcb,0xcd,0xcd,0x49,0x5f,0x74,0xcc,0xcd,0x1b,0xcc,0xde,0x5f,0xff,0xff,0x37,0x01};
     for(int i = 0; i < 21; i++){
         memory[i] = program[i];
     }
-    //write memory[0xfe] = 2;
     memory[254] = 2;
 
-    //Repeat steps 1-4 44 times.
-    for(int x = 0; x <50; x++) {
+//  //The following lines (33-37) should be implemented for the fibonacci program. Else, they should be commented out.
+//  //Use a for loop to copy the fibonacci program into memory array. The instruction to make memory[0xfe] = 6 is already included in the fibonacci program so there is no need to implement that in this C++ compiler;
+//    unsigned char fibonacci_program[40] ={0xC4, 0xC4, 0xC8, 0xC9, 0xCC, 0xDE, 0xF3, 0xF2, 0x3C , 0xF3, 0xF2, 0x2C, 0xC2,0xD3, 0x4D, 0x58, 0x76, 0xFF, 0xFF, 0x37, 0xFF, 0xFD, 0x3B, 0x27, 0xFF, 0xFF, 0x2B, 0xF3, 0xF2, 0x2C, 0xC0, 0xC1, 0x1C, 0xF3, 0xF2, 0x3C, 0xCC, 0xED, 0x53, 0x01 };
+//    for(int i = 0; i <40; i++){
+//        memory[i]=fibonacci_program[i];
+//    }
+    int halt = 0;
+    int x = -1; //This is the line counter. It starts at -1 so that the line number matches the index of the instruction in the memory array
+    //Repeat steps 1-4 200 times.
+    while (halt == 0) {
+        x++;
         //Step 1: Fetch instruction from memory
         unsigned char instruction = memory[PC];
         //unsigned char instruction = 0b00100001;
@@ -72,8 +75,6 @@ int main() {
             if (rd == 1) registers[1] = sum;
             if (rd == 2) registers[2] = sum;
             if (rd == 3) registers[3] = sum;
-            //save result in memory 0xff
-            memory[255] = sum;
         }
             //SUB
         else if (opcode == 0b0001) {
@@ -84,8 +85,6 @@ int main() {
             if (rd == 1) registers[1] = subtraction;
             if (rd == 2) registers[2] = subtraction;
             if (rd == 3) registers[3] = subtraction;
-            //save result in memory 0xff
-            memory[255] = subtraction;
         }
             //LOAD
         else if (opcode == 0b0010) {
@@ -96,16 +95,12 @@ int main() {
             if (rd == 1) registers[1] = rdvalue;
             if (rd == 2) registers[2] = rdvalue;
             if (rd == 3) registers[3] = rdvalue;
-            //save result in memory 0xff
-            memory[255] = rdvalue;
         }
             //STORE
         else if (opcode == 0b0011) {
             iname = "STORE";
             //Step4: Store rdvalue in the memory location indicated by the value saved in rsvalue
             memory[rsvalue] = rdvalue;
-            //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
-            memory[255] = rdvalue;
         }
             //SKIPNZ and SKIPZ (they have the same four left-most bits opcode but the two right-most defer)
         else if (opcode == 0b0100) {
@@ -114,15 +109,11 @@ int main() {
                 iname = "SKIPZ";
                 if (rdvalue == 0) {
                     PC++; //We increase PC by one so that the next instruction in the memory array is skipped
-                    //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
-                    memory[255] = rdvalue;
                 }
             } else if (opcode2 == 1) {//SKIPNZ
                 iname = "SKIPNZ";
                 if (rdvalue != 0) {
                     PC++; //We increase PC by one so that the next instruction in the memory array is skipped
-                    //save result in memory 0xff. NOTE: this line below is probably unnecessary since the value of rd was not changed
-                    memory[255] = rdvalue;
                 }
             }
         }
@@ -130,14 +121,12 @@ int main() {
         else if (opcode == 0b0101) {
             iname = "JALR";
             unsigned char address = rsvalue; //Use a temporary variable to save the address that is stored in rsvalue
-            rdvalue = PC;  //QUESTION: I'm confused as to why rdvalue is not PC + 1, but this was the only way I got yhe desired output
+            rdvalue = PC;  //Rvalue is PC, because at the top of this while loop I've already increased 1 to PC
             if (rd == 0) registers[0] = rdvalue;
             if (rd == 1) registers[1] = rdvalue;
             if (rd == 2) registers[2] = rdvalue;
             if (rd == 3) registers[3] = rdvalue;
             PC = address;
-            //save result in memory 0xff.
-            memory[255] = rdvalue;
         }
             //SLI
         else if (opcode3 == 3) {
@@ -152,12 +141,12 @@ int main() {
             if (rd == 1) registers[1] = (rdvalue << 4) | imm;
             if (rd == 2) registers[2] = (rdvalue << 4) | imm;
             if (rd == 3) registers[3] = (rdvalue << 4) | imm;
-            //save result in memory 0xff.
-            memory[255] = (rdvalue << 4) | imm;
         }
             //HALT
         else if (instruction == 1) {
+            halt = 1;
             cout << "The program has been halted." << endl;
+            break;
         }
 
         cout << "Instruction:" << iname << endl;

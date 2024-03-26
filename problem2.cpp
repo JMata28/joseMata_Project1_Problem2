@@ -13,7 +13,7 @@ int main() {
     //Set PC to 0
     PC =0;
 
-    // The following lines (25-29) should be implemented for the test program that multiplies 2*3. Else, they should be commented out.
+    // The following lines (18-22) should be implemented for the test program that multiplies 2*3. Else, they should be commented out.
     //Use a for loop to copy the test program into memory array and write memory[0xfe] = 2;
     unsigned char program[21] = {0xff,0xfe,0x23,0x15,0xc8,0xcb,0xcd,0xcd,0x49,0x5f,0x74,0xcc,0xcd,0x1b,0xcc,0xde,0x5f,0xff,0xff,0x37,0x01};
     for(int i = 0; i < 21; i++){
@@ -21,7 +21,7 @@ int main() {
     }
     memory[254] = 2;
 
-//  //The following lines (33-37) should be implemented for the fibonacci program. Else, they should be commented out.
+//  //The following lines (26-29) should be implemented for the fibonacci program. Else, they should be commented out.
 //  //Use a for loop to copy the fibonacci program into memory array. The instruction to make memory[0xfe] = 6 is already included in the fibonacci program so there is no need to implement that in this C++ compiler;
 //    unsigned char fibonacci_program[40] ={0xC4, 0xC4, 0xC8, 0xC9, 0xCC, 0xDE, 0xF3, 0xF2, 0x3C , 0xF3, 0xF2, 0x2C, 0xC2,0xD3, 0x4D, 0x58, 0x76, 0xFF, 0xFF, 0x37, 0xFF, 0xFD, 0x3B, 0x27, 0xFF, 0xFF, 0x2B, 0xF3, 0xF2, 0x2C, 0xC0, 0xC1, 0x1C, 0xF3, 0xF2, 0x3C, 0xCC, 0xED, 0x53, 0x01 };
 //    for(int i = 0; i <40; i++){
